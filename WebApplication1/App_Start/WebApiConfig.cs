@@ -25,6 +25,10 @@ namespace WebApplication1
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+            //add a filtter to handle invalid model state for all controllers
+            config.Filters.Add(new WebApplication1.Controllers.ValidateModelAttributeFilter());
+
+
         }
     }
 }
