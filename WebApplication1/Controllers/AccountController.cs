@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
@@ -411,6 +414,39 @@ namespace WebApplication1.Controllers
             }
 
             return Ok(new { userId = id, rolesAssigned = rolesToAssign });
+        }
+
+        [AllowAnonymous]
+        [HttpDelete]
+        [Route("user/{id:guid}")]
+        public IHttpActionResult DeleteUser(string id)
+        {
+            //check if such a user exists in the database
+            var userToDelete = this.UserManager.FindById(id);
+            if (userToDelete == null)
+            {
+                return this.NotFound();
+            }
+            else if (userToDelete.IsDeleted)
+            {
+                return this.BadRequest("User already deleted");
+            }
+            else
+            {
+                var con = ConfigurationManager.ConnectionStrings["IdentityConnectionString"].ConnectionString;
+                using (SqlConnection connection = new SqlConnection(con))
+                {
+                    using (SqlCommand command = new SqlCommand("dbo.DeleteUser", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.Add("@UserId", SqlDbType.NVarChar).Value = id;
+                        connection.Open();
+                        command.ExecuteNonQuery();
+                        connection.Close();
+                    }
+                }
+            }
+            return this.Ok();
         }
 
         // POST api/Account/RegisterExternal
