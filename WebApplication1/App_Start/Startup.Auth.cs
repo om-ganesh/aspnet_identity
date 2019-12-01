@@ -10,6 +10,7 @@ using Microsoft.Owin.Security.OAuth;
 using Owin;
 using WebApplication1.Providers;
 using WebApplication1.Models;
+using static WebApplication1.ApplicationUserManager;
 
 namespace WebApplication1
 {
@@ -25,7 +26,8 @@ namespace WebApplication1
             // Configure the db context and user manager to use a single instance per request
             app.CreatePerOwinContext(AppUsersDbContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
-
+            ///Initializing Role Manager
+            app.CreatePerOwinContext<ApplicationRoleManager>(ApplicationRoleManager.Create);
             // Enable the application to use a cookie to store information for the signed in user
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider
             app.UseCookieAuthentication(new CookieAuthenticationOptions());

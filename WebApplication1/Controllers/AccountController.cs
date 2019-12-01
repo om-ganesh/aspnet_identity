@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -16,6 +17,7 @@ using Microsoft.Owin.Security.OAuth;
 using WebApplication1.Models;
 using WebApplication1.Providers;
 using WebApplication1.Results;
+using static WebApplication1.ApplicationUserManager;
 
 namespace WebApplication1.Controllers
 {
@@ -25,16 +27,20 @@ namespace WebApplication1.Controllers
     {
         private const string LocalLoginProvider = "Local";
         private ApplicationUserManager _userManager;
+        private ApplicationRoleManager _roleManager;
 
         public AccountController()
         {
         }
 
         public AccountController(ApplicationUserManager userManager,
-            ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
+            ISecureDataFormat<AuthenticationTicket> accessTokenFormat,
+            ApplicationRoleManager roleManager)
         {
             UserManager = userManager;
             AccessTokenFormat = accessTokenFormat;
+            // Make an instance of the role manager in the constructor to avoid null reference exception
+            RoleManager = roleManager;
         }
 
         public ApplicationUserManager UserManager
@@ -46,6 +52,18 @@ namespace WebApplication1.Controllers
             private set
             {
                 _userManager = value;
+            }
+        }
+
+        public ApplicationRoleManager RoleManager
+        {
+            get
+            {
+                return _roleManager ?? Request.GetOwinContext().GetUserManager<ApplicationRoleManager>();
+            }
+            private set
+            {
+                _roleManager = value;
             }
         }
 
@@ -318,26 +336,56 @@ namespace WebApplication1.Controllers
             return logins;
         }
 
-        // POST api/Account/Register
         [AllowAnonymous]
-        [Route("Register")]
-        public async Task<IHttpActionResult> Register(RegisterBindingModel model)
+        [Route("users/{id:guid}/roles")]
+        [HttpPut]
+        public async Task<IHttpActionResult> AssignRolesToUser(string id, string[] rolesToAssign)
         {
-            if (!ModelState.IsValid)
+            if (rolesToAssign == null)
             {
+                return this.BadRequest("No roles specified");
+            }
+
+            ///find the user we want to assign roles to
+            var appUser = await this.UserManager.FindByIdAsync(id);
+
+            //if (appUser == null || appUser.IsDeleted)
+            //{
+            //    return NotFound();
+            //}
+
+            ///check if the user currently has any roles
+            var currentRoles = await this.UserManager.GetRolesAsync(appUser.Id);
+
+
+            var rolesNotExist = rolesToAssign.Except(this.RoleManager.Roles.Select(x => x.Name)).ToArray();
+
+            if (rolesNotExist.Count() > 0)
+            {
+                ModelState.AddModelError("", string.Format("Roles '{0}' does not exist in the system", string.Join(",", rolesNotExist)));
+                return this.BadRequest(ModelState);
+            }
+
+            ///remove user from current roles, if any
+            IdentityResult removeResult = await this.UserManager.RemoveFromRolesAsync(appUser.Id, currentRoles.ToArray());
+
+
+            if (!removeResult.Succeeded)
+            {
+                ModelState.AddModelError("", "Failed to remove user roles");
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+            ///assign user to the new roles
+            IdentityResult addResult = await this.UserManager.AddToRolesAsync(appUser.Id, rolesToAssign);
 
-            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
-
-            if (!result.Succeeded)
+            if (!addResult.Succeeded)
             {
-                return GetErrorResult(result);
+                ModelState.AddModelError("", "Failed to add user roles");
+                return BadRequest(ModelState);
             }
 
-            return Ok();
+            return Ok(new { userId = id, rolesAssigned = rolesToAssign });
         }
 
         // POST api/Account/RegisterExternal
