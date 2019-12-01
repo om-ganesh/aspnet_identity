@@ -14,6 +14,9 @@ namespace WebApplication1.Models
     {
         // Property used for soft deleting users
         public bool IsDeleted { get; set; }
+        [Required]
+        public DateTimeOffset DateOfBirth { get; set; }
+
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager, string authenticationType)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType

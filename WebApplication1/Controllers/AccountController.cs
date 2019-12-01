@@ -349,7 +349,7 @@ namespace WebApplication1.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email, DateOfBirth = model.DateOfBirth };
 
             //set the IsDeleted property to false
             user.IsDeleted = false;

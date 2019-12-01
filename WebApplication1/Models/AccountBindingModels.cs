@@ -48,6 +48,12 @@ namespace WebApplication1.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.")]
+        [DataType(DataType.Date)]
+        [Display(Name = "Date of Birth")]
+        public DateTimeOffset DateOfBirth { get; set; }
     }
 
     public class RegisterExternalBindingModel

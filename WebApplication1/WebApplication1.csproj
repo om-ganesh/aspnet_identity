@@ -229,6 +229,10 @@
     <Compile Include="Migrations\201912010933357_Use-Customize-Roles.Designer.cs">
       <DependentUpon>201912010933357_Use-Customize-Roles.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912010938181_Add-dob-applicationuser.cs" />
+    <Compile Include="Migrations\201912010938181_Add-dob-applicationuser.Designer.cs">
+      <DependentUpon>201912010938181_Add-dob-applicationuser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -341,6 +345,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912010933357_Use-Customize-Roles.resx">
       <DependentUpon>201912010933357_Use-Customize-Roles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912010938181_Add-dob-applicationuser.resx">
+      <DependentUpon>201912010938181_Add-dob-applicationuser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
