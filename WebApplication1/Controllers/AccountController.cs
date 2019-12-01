@@ -336,6 +336,31 @@ namespace WebApplication1.Controllers
             return logins;
         }
 
+        // POST api/Account/Register
+        [AllowAnonymous]
+        [Route("Register")]
+        public async Task<IHttpActionResult> Register(RegisterBindingModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = new ApplicationUser() { UserName = model.Email, Email = model.Email };
+
+            //set the IsDeleted property to false
+            user.IsDeleted = false;
+
+            IdentityResult result = await UserManager.CreateAsync(user, model.Password);
+
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            return Ok();
+        }
+
         [AllowAnonymous]
         [Route("users/{id:guid}/roles")]
         [HttpPut]
@@ -349,10 +374,10 @@ namespace WebApplication1.Controllers
             ///find the user we want to assign roles to
             var appUser = await this.UserManager.FindByIdAsync(id);
 
-            //if (appUser == null || appUser.IsDeleted)
-            //{
-            //    return NotFound();
-            //}
+            if (appUser == null || appUser.IsDeleted)
+            {
+                return NotFound();
+            }
 
             ///check if the user currently has any roles
             var currentRoles = await this.UserManager.GetRolesAsync(appUser.Id);
