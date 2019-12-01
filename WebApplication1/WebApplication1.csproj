@@ -221,6 +221,10 @@
     <Compile Include="Migrations\201912010713271_Initial.Designer.cs">
       <DependentUpon>201912010713271_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912010827556_Change-Identity-Table-Names.cs" />
+    <Compile Include="Migrations\201912010827556_Change-Identity-Table-Names.Designer.cs">
+      <DependentUpon>201912010827556_Change-Identity-Table-Names.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -327,6 +331,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912010713271_Initial.resx">
       <DependentUpon>201912010713271_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912010827556_Change-Identity-Table-Names.resx">
+      <DependentUpon>201912010827556_Change-Identity-Table-Names.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
