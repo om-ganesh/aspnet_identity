@@ -24,7 +24,7 @@ using static WebApplication1.ApplicationUserManager;
 
 namespace WebApplication1.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [RoutePrefix("api/Account")]
     public class AccountController : ApiController
     {
@@ -416,7 +416,8 @@ namespace WebApplication1.Controllers
             return Ok(new { userId = id, rolesAssigned = rolesToAssign });
         }
 
-        [AllowAnonymous]
+        [OverrideAuthorization]
+        [Authorize(Roles = "Admin,Manager")]
         [HttpDelete]
         [Route("user/{id:guid}")]
         public IHttpActionResult DeleteUser(string id)
