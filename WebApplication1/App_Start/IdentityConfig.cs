@@ -45,9 +45,9 @@ namespace WebApplication1
         /// <summary>
         /// The role manager used by the application to store roles and their connections to users
         /// </summary>
-        public class ApplicationRoleManager : RoleManager<IdentityRole>
+        public class ApplicationRoleManager : RoleManager<ApplicationRole>
         {
-            public ApplicationRoleManager(IRoleStore<IdentityRole, string> roleStore)
+            public ApplicationRoleManager(IRoleStore<ApplicationRole, string> roleStore)
                 : base(roleStore)
             {
             }
@@ -55,7 +55,7 @@ namespace WebApplication1
             public static ApplicationRoleManager Create(IdentityFactoryOptions<ApplicationRoleManager> options, IOwinContext context)
             {
                 ///It is based on the same context as the ApplicationUserManager
-                var appRoleManager = new ApplicationRoleManager(new RoleStore<IdentityRole>(context.Get<AppUsersDbContext>()));
+                var appRoleManager = new ApplicationRoleManager(new RoleStore<ApplicationRole>(context.Get<AppUsersDbContext>()));
 
                 return appRoleManager;
             }

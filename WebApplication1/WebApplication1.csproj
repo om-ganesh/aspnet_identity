@@ -225,6 +225,10 @@
     <Compile Include="Migrations\201912010827556_Change-Identity-Table-Names.Designer.cs">
       <DependentUpon>201912010827556_Change-Identity-Table-Names.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912010933357_Use-Customize-Roles.cs" />
+    <Compile Include="Migrations\201912010933357_Use-Customize-Roles.Designer.cs">
+      <DependentUpon>201912010933357_Use-Customize-Roles.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -334,6 +338,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912010827556_Change-Identity-Table-Names.resx">
       <DependentUpon>201912010827556_Change-Identity-Table-Names.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912010933357_Use-Customize-Roles.resx">
+      <DependentUpon>201912010933357_Use-Customize-Roles.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
