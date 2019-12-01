@@ -30,4 +30,17 @@ namespace WebApplication1.Models
             return new ApplicationDbContext();
         }
     }
+
+    public class AppUsersDbContext : IdentityDbContext<ApplicationUser>
+    {
+        public AppUsersDbContext()
+            : base("IdentityConnectionString", throwIfV1Schema: false)
+        {
+        }
+
+        public static AppUsersDbContext Create()
+        {
+            return new AppUsersDbContext();
+        }
+    }
 }
